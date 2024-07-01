@@ -16,6 +16,25 @@ class _NinjaCardState extends State<NinjaCard> {
   //defining data/state which can change over time
   int ninjaLevel = 0;
 
+  //method to show a Snackbar with a message
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  //method to show level value change alert
+  void _changeLevel(int change) {
+    setState(() {
+      ninjaLevel += change;
+      if (ninjaLevel < 0) ninjaLevel = 0; // just to prevent negative levels
+    });
+    _showSnackbar('Level ${change > 0 ? 'Increased' : 'Decreased'} to $ninjaLevel');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,17 +46,23 @@ class _NinjaCardState extends State<NinjaCard> {
         foregroundColor: Colors.white,
         elevation: 0.0,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-        backgroundColor: Colors.grey[700],
-        foregroundColor: Colors.white,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.remove_circle),
-        backgroundColor: Colors.grey[700],
-        foregroundColor: Colors.white,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () => _changeLevel(1),
+            child: Icon(Icons.plus_one_rounded),
+            backgroundColor: Colors.grey[700],
+            foregroundColor: Colors.white,
+          ),
+          SizedBox(height: 10), // Space between buttons
+          FloatingActionButton(
+            onPressed: () => _changeLevel(-1),
+            child: Icon(Icons.remove_circle),
+            backgroundColor: Colors.grey[700],
+            foregroundColor: Colors.white,
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 0.0),
